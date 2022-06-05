@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
+	"time"
 
 	pb "github.com/gowithvikash/grpc_with_go/greet/proto"
 
@@ -20,19 +22,26 @@ var (
 )
 
 func main() {
+	time.Sleep(1 * time.Second)
 	fmt.Println("__Client Is Trying To Connect With Server On Address : ", address)
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal("__Client Is Failed To Connect With Server !")
 	}
+	time.Sleep(1 * time.Second)
 	fmt.Println("__Client Is Successfully Connected To Server . ")
 	defer conn.Close()
 	c := pb.NewGreetServiceClient(conn)
-
+	time.Sleep(5 * time.Second)
 	do_Simple_Greet(c)
-	// do_Greet_Many_Times(c)
-	// do_Long_Greet(c)
+	time.Sleep(5 * time.Second)
+	do_Greet_Many_Times(c)
+	time.Sleep(5 * time.Second)
+	do_Long_Greet(c)
+	time.Sleep(5 * time.Second)
 	// do_Greet_Every_One(c)
+	// time.Sleep(5 * time.Second)
+	os.Exit(1)
 }
 
 func do_Simple_Greet(c pb.GreetServiceClient) {
@@ -87,7 +96,16 @@ func do_Long_Greet(c pb.GreetServiceClient) {
 }
 
 //
-func do_Greet_Every_One(c pb.GreetServiceClient) {
-	fmt.Println("_______ do_Greet_Every_One()  Function Was Invoked At Client _______")
+// func do_Greet_Every_One(c pb.GreetServiceClient) {
+// 	fmt.Println("_______ do_Greet_Every_One()  Function Was Invoked At Client _______")
+// 	var reqs = []*pb.GreetRequest{{Name: "Vikash Parashar"}, {Name: "Khushboo Panday"}, {Name: "Niyati"}, {Name: "Ritika"}, {Name: "Rampati Devi"}}
 
-}
+// 	stream, err := c.Long_Greet(context.Background())
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	for _, v := range reqs {
+// 		stream.Send(v)
+// 	}
+
+// }
