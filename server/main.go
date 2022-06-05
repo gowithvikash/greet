@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net"
-	"os"
 	"time"
 
 	pb "github.com/gowithvikash/grpc_with_go/greet/proto"
@@ -38,7 +37,6 @@ func main() {
 	}
 	time.Sleep(1 * time.Second)
 	fmt.Println("\n__Server Is Ready To Server On Address : ", address)
-	defer os.Exit(1)
 
 }
 
@@ -79,6 +77,21 @@ func (s *Server) Long_Greet(stream pb.GreetService_Long_GreetServer) error {
 	}
 }
 
-// func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) error {
-// 	fmt.Println("_____  Greet_Every_One() Function Was Invoked At Server  _____")
-// }
+func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) error {
+	fmt.Println("_____  Greet_Every_One() Function Was Invoked At Server  _____")
+	for {
+		req, err := stream.Recv()
+		fmt.Println("Receiving Requests From Client")
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = stream.Send(&pb.GreetResponse{Result: "Hello" + req.Name})
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
