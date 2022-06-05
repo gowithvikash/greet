@@ -40,12 +40,14 @@ func (s *Server) Simple_Greet(ctx context.Context, in *pb.GreetRequest) (*pb.Gre
 	return &pb.GreetResponse{Result: "Hello , " + in.Name + " ! "}, nil
 }
 
-// func (s *Server) Greet_Many_Times(in *pb.GreetRequest, stream pb.GreetService_Greet_Many_TimesServer) error {
-// 	fmt.Println("___________   Greet_Many_Times() Function Was Invoked At Server   ___________")
-// }
-// func (s *Server) Long_Greet(stream pb.GreetService_Long_GreetServer) error {
-// 	fmt.Println("____________     Long_Greet() Function Was Invoked At Server    _____________")
-// }
-// func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) error {
-// 	fmt.Println("____________  Greet_Every_One() Function Was Invoked At Server  _____________")
-// }
+func (s *Server) Greet_Many_Times(in *pb.GreetRequest, stream pb.GreetService_Greet_Many_TimesServer) error {
+	fmt.Println("___________   Greet_Many_Times() Function Was Invoked At Server   ___________")
+
+}
+
+func (s *Server) Long_Greet(stream pb.GreetService_Long_GreetServer) error {
+	fmt.Println("____________     Long_Greet() Function Was Invoked At Server    _____________")
+}
+func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) error {
+	fmt.Println("____________  Greet_Every_One() Function Was Invoked At Server  _____________")
+}
