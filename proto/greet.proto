@@ -17,6 +17,7 @@ service GreetService{
     rpc Greet_Many_Times (GreetRequest) returns (stream GreetResponse);
     rpc Long_Greet (stream GreetRequest) returns (GreetResponse);
     rpc Greet_Every_One (stream GreetRequest) returns (stream GreetResponse);
+    rpc Greet_With_DeadLine (GreetRequest) returns (GreetResponse);
 }
 
 // protoc -Iproto --go_opt=module=github.com/gowithvikash/grpc_with_go/greet/proto --go_out=proto/. --go-grpc_opt=module=github.com/gowithvikash/grpc_with_go/greet/proto --go-grpc_out=proto/. proto/greet.proto

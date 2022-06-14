@@ -10,6 +10,8 @@ import (
 
 	pb "github.com/gowithvikash/grpc_with_go/greet/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -94,4 +96,19 @@ func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) e
 			log.Fatal(err)
 		}
 	}
+}
+func (s *Server) Greet_With_DeadLine(ctx context.Context, in *pb.GreetRequest) (*pb.GreetResponse, error) {
+	fmt.Println("_____  Greet_With_DeadLine() Function Was Invoked At Server  _____")
+	for i := 0; i < 3; i++ {
+		if ctx.Err() == context.DeadlineExceeded {
+			log.Println("client canceled the request !")
+			return nil, status.Errorf(codes.Canceled, "client calcelled the request")
+
+		}
+		time.Sleep(1 * time.Second)
+	}
+	return &pb.GreetResponse{
+		Result: "Hello Mr." + in.Name + ", This Is Greet _With_DeadLine .",
+	}, nil
+
 }

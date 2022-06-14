@@ -10,7 +10,9 @@ import (
 	pb "github.com/gowithvikash/grpc_with_go/greet/proto"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 )
 
 // import (
@@ -39,7 +41,12 @@ func main() {
 	do_Long_Greet(c)
 	time.Sleep(1 * time.Second)
 	do_Greet_Every_One(c)
+
+	time.Sleep(1 * time.Second) //ok
+	do_Greet_With_DeadLine(c, 5*time.Second)
+
 	time.Sleep(1 * time.Second)
+	do_Greet_With_DeadLine(c, 2*time.Second) // not ok
 
 }
 
@@ -135,5 +142,28 @@ func do_Greet_Every_One(c pb.GreetServiceClient) {
 		close(waitc)
 	}()
 	<-waitc
+
+}
+
+func do_Greet_With_DeadLine(c pb.GreetServiceClient, timeout time.Duration) {
+	fmt.Println("____ do_Greet_With_DeadLine()  Function Was Invoked At Client ____")
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	res, err := c.Greet_With_DeadLine(ctx, &pb.GreetRequest{Name: "Vikash Parashar"})
+	if err != nil {
+		e, ok := status.FromError(err)
+		if ok {
+			if e.Code() == codes.DeadlineExceeded {
+				log.Println("DeadLine Exceeded !")
+			} else {
+				log.Fatal("unexcpted grpc error", err)
+			}
+
+		} else {
+			log.Fatalf("non grpc error : %v", err)
+		}
+	}
+	fmt.Printf("do_Greet_With_DeadLine() Result: %v\n", res.Result)
 
 }
